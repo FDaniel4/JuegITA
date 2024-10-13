@@ -47,7 +47,7 @@ class PlayerAdapter : RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
-        // Aquí solo pondremos datos de ejemplo
+
         holder.nameTextView.text = "Jugador ${position + 1}"
         holder.scoreTextView.text = "Puntaje: ${1000 - position * 100}"
         holder.gamesPlayedTextView.text = "Partidas jugadas: ${10 - position}"
