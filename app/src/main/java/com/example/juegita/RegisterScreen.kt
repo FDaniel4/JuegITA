@@ -2,7 +2,9 @@ package com.example.juegita
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -34,10 +37,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(onRegisterClick: () -> Unit, onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
+fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier ) {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -51,7 +56,6 @@ fun RegisterScreen(onRegisterClick: () -> Unit, onLoginClick: () -> Unit, modifi
             .fillMaxSize()
             .background(Color(0xFF6200EA)) // Light Blue background
             .padding(5.dp)
-
     ) {
 //        Image(
 //            painter = painterResource(R.drawable.fondo_neon),
@@ -100,7 +104,7 @@ fun RegisterScreen(onRegisterClick: () -> Unit, onLoginClick: () -> Unit, modifi
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White)
-                    .padding(8.dp), // Padding alrededor de toda la caja
+                    .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically, // Alinear verticalmente al centro
             ){
                 Icon(
@@ -256,7 +260,7 @@ fun RegisterScreen(onRegisterClick: () -> Unit, onLoginClick: () -> Unit, modifi
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(top = 6.dp)
+                    .padding(top = 4.dp)
                     .fillMaxWidth()
             ) {
                 Checkbox(
@@ -268,15 +272,20 @@ fun RegisterScreen(onRegisterClick: () -> Unit, onLoginClick: () -> Unit, modifi
                         checkmarkColor = Color.White
                     )
                 )
-                Text(text = "Estoy de acuerdo con los terminos y condiciones", color = Color.Yellow, fontSize = 12.sp)
-
+                TextButton(onClick = { navController.navigate("terminos") }) {
+                    Text(
+                        text = "Estoy de acuerdo con los terminos y condiciones",
+                        color = Color.Yellow,
+                        fontSize = 12.sp
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Register Button
             Button(
-                onClick = onRegisterClick,
+                onClick = { navController.navigate("minijuegos") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(Color(0xFFFF5722)) // Orange Button
             ) {
@@ -286,7 +295,7 @@ fun RegisterScreen(onRegisterClick: () -> Unit, onLoginClick: () -> Unit, modifi
             Spacer(modifier = Modifier.height(16.dp))
 
             // Go to Login Button
-            TextButton(onClick = onLoginClick) {
+            TextButton(onClick = { navController.navigate("inicio-sesion") }) {
                 Text("¿Ya tienes una cuenta? Inicia sesión!", color = Color.Yellow)
             }
         }
@@ -296,6 +305,6 @@ fun RegisterScreen(onRegisterClick: () -> Unit, onLoginClick: () -> Unit, modifi
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewRegisterScreen() {
-    RegisterScreen(onRegisterClick = {}, onLoginClick = {})
+    RegisterScreen(navController = rememberNavController())
 }
 
