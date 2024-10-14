@@ -13,21 +13,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.rememberImagePainter
 
-import com.example.juegita.R
-
-class MainActivity : ComponentActivity() {
+class SelectGame : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -99,15 +93,15 @@ fun PantallaPrincipal(modifier: Modifier = Modifier) {
         ) {
             MinijuegoButton(
                 minijuego = "Minijuego 1",
-                imageRes = R.drawable.minijuego1
+                imageUrl = "https://www4.minijuegosgratis.com/v3/games/thumbnails/208506_1.jpg"
             )
             MinijuegoButton(
                 minijuego = "Minijuego 2",
-                imageRes = R.drawable.minijuego2
+                imageUrl = "https://images8.alphacoders.com/397/397848.jpg"
             )
             MinijuegoButton(
                 minijuego = "Minijuego 3",
-                imageRes = R.drawable.minijuego3
+                imageUrl = "https://tecnoguia.net/wp-content/uploads/2022/12/Como-se-juega-al-Buscaminas-e1672181342656.jpeg"
             )
         }
 
@@ -124,48 +118,30 @@ fun PantallaPrincipal(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MinijuegoButton(minijuego: String, imageRes: Int) {
+fun MinijuegoButton(minijuego: String, imageUrl: String) {
     Button(
         onClick = { /* Acción al seleccionar un minijuego */ },
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
-            .width(200.dp)  // Ajusta el ancho del botón
-            .height(150.dp), // Ajusta el alto del botón
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent  // Fondo del botón transparente
-        ),
-        contentPadding = PaddingValues(0.dp)
+            .width(200.dp) // Ajusta el ancho del botón
+            .height(150.dp) // Ajusta el alto del botón
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Imagen como fondo del botón
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Imagen del minijuego
             Image(
-                painter = painterResource(id = imageRes),
+                painter = rememberImagePainter(data = imageUrl),
                 contentDescription = "Imagen de $minijuego",
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
                 contentScale = ContentScale.Crop
             )
-            // Texto con degradado sobre la imagen
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            brush = Brush.linearGradient(
-                                colors = listOf(Color.Blue, Color.Red)  // Degradado azul a rojo
-                            )
-                        )
-                    ) {
-                        append(minijuego)
-                    }
-                },
-                fontSize = 18.sp,
-                modifier = Modifier.align(Alignment.Center)  // Centra el texto en el botón
-            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Texto del minijuego
+            Text(text = minijuego, fontSize = 18.sp)
         }
     }
 }
-
 
 @Composable
 fun OpcionesButton(texto: String, onClick: () -> Unit) {
