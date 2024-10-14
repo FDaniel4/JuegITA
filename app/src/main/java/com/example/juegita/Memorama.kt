@@ -1,74 +1,114 @@
 package com.example.juegita
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.juegita.ui.theme.JuegITATheme
 
-
-class Memorama : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            JuegITATheme {
-                // Llamada a la función principal del memorama
-                MemoramaGame()
-            }
-        }
-    }
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MemoramaGame() {
-    // Imagen de fondo
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Gray)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.img_2), // Asegúrate de tener esta imagen en tu carpeta drawable
-            contentDescription = "Fondo de Memorama",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-
-        // Contenido del juego
-        Column(
+fun MemoramaGame(navController: NavController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val gradientColors = listOf(Color.Blue, Color.Black)
+                        Text(
+                            text = "Memorama",
+                            color = Color.Black,
+                            fontSize = 26.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.Center),
+                            style = TextStyle(
+                                brush = Brush.linearGradient(colors = gradientColors)
+                            )
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigate("minijuegos") }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.Black,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF1976D2),
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
+                )
+            )
+        }
+    ) { paddingValues ->
+        // Imagen de fondo
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(paddingValues) // Añadir padding del Scaffold
+                .background(Color.Gray)
         ) {
-            // texto
-            Text(
-                text = "Memorama",
-                fontSize = 40.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF1976D2), // Color azul oscuro
-                textAlign = TextAlign.Center
+            Image(
+                painter = painterResource(id = R.drawable.img_2), // Asegúrate de tener esta imagen en drawable
+                contentDescription = "Fondo de Memorama",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
 
-            // Cuadrícula de cartas
-            CardGrid()
+            // Contenido del juego
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Texto de título
+                Text(
+                    text = "Memorama",
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF1976D2), // Color azul oscuro
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Cuadrícula de cartas (Aquí llamas a tu función CardGrid)
+                CardGrid()
+            }
         }
     }
 }
@@ -113,14 +153,14 @@ fun CardButton(cardNumber: Int) {
     ) {
         if (flipped) {
             Image(
-                painter = painterResource(id = R.drawable.img), // Asegúrate de tener esta imagen en drawable
+                painter = painterResource(id = R.drawable.img),
                 contentDescription = "Carta Frente",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
         } else {
             Image(
-                painter = painterResource(id = R.drawable.img_1), // Asegúrate de tener esta imagen en drawable
+                painter = painterResource(id = R.drawable.img_1),
                 contentDescription = "Carta Trasera",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -133,6 +173,6 @@ fun CardButton(cardNumber: Int) {
 @Composable
 fun MemoramaScreenPreview() {
     JuegITATheme  {
-        MemoramaGame()
+        MemoramaGame(navController = NavController(LocalContext.current))
     }
 }

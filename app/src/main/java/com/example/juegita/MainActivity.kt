@@ -1,6 +1,5 @@
 package com.example.juegita
 
-import MinijuegosApp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -69,6 +68,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.juegita.ui.theme.JuegITATheme
+import com.example.juegita.ui.theme.PasswordEditScreen
+import com.example.juegita.ui.theme.ProfileEditScreen
 import com.example.juegita.ui.theme.TermsConditionsScreen
 
 class MainActivity : ComponentActivity() {
@@ -216,8 +217,13 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
                     )
                 )
                 Text(text = "Recordar contraseña", color = Color.White)
-                Text(text = "¿Olvidaste tu contraseña?", color = Color.Yellow,
-                    modifier = Modifier.padding(start = 25.dp))
+                TextButton(onClick = { navController.navigate("cambiar-contraseña") }) {
+                    Text(
+                        text = "¿Olvidaste tu contraseña?", color = Color.Yellow,
+                        modifier = Modifier.padding(start = 10.dp),
+                        fontSize = 13.sp
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -265,6 +271,12 @@ fun SetupNavGraph (navController: NavHostController){
         composable("minijuegos"){ MinijuegosApp(navController) }
         composable("settings"){ GlobalSettingsScreen(navController) }
         composable("terminos"){ TermsConditionsScreen(navController) }
+        composable("perfil"){ UserProfileScreen(navController) }
+        composable("editar-perfil"){ ProfileEditScreen(navController) }
+        composable("cambiar-contraseña"){ PasswordEditScreen(navController) }
+        composable("tic-tac-toe"){ TicTacToeGame(navController) }
+        //composable("buscaminas_screen"){ BuscaminasScreen(navController) }
+        composable("memorama"){ MemoramaGame(navController) }
 
     }
 }

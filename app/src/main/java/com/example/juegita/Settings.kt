@@ -120,7 +120,7 @@ fun GlobalSettingsScreen(navController: NavHostController) {
             ) {
 
                 // Sección de Cuenta
-                ExtendedFloatingActionButton(onClick = { /* Acción al hacer clic en el botón*/ },
+                ExtendedFloatingActionButton(onClick = { navController.navigate("perfil") },
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = Color.White,
                     contentColor = Color.Black,

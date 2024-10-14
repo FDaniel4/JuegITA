@@ -1,6 +1,5 @@
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+package com.example.juegita
+
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
@@ -29,14 +28,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.juegita.R
 
-class SelectGame : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MinijuegosApp(navController = rememberNavController())
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,13 +86,13 @@ fun MinijuegosApp(navController: NavHostController) {
         },
         content = { paddingValues ->
             // Pasamos el padding a PantallaPrincipal
-            PantallaPrincipal(modifier = Modifier.padding(paddingValues))
+            PantallaPrincipal(navController = navController, modifier = Modifier.padding(paddingValues))
         }
     )
 }
 
 @Composable
-fun PantallaPrincipal(modifier: Modifier = Modifier) {
+fun PantallaPrincipal(navController: NavHostController, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -125,16 +116,18 @@ fun PantallaPrincipal(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(12.dp) // Espaciado entre botones
         ) {
             MinijuegoButton(
-                minijuego = "Tres en raya",
-                image = R.drawable.tres_en_raya
+                minijuego = "Tic-Tac-Toe",
+                image = R.drawable.tres_en_raya,
+                onClick = {navController.navigate("tic-tac-toe")}
+            )
+            MinijuegoButton(
+                minijuego = "Memorama",
+                image = R.drawable.dado,
+                onClick = {navController.navigate("memorama")}
             )
             MinijuegoButton(
                 minijuego = "Buscaminas",
                 image = R.drawable.buscaminas
-            )
-            MinijuegoButton(
-                minijuego = "Memorama",
-                image = R.drawable.dado
             )
         }
 
@@ -151,9 +144,14 @@ fun PantallaPrincipal(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MinijuegoButton(minijuego: String,@DrawableRes image: Int, modifier: Modifier = Modifier) {
+fun MinijuegoButton(
+    minijuego: String,
+    @DrawableRes image: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+    ) {
     Button(
-        onClick = { /* Acción al seleccionar un minijuego */ },
+        onClick = onClick,
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(Color.Gray),
         modifier = Modifier
