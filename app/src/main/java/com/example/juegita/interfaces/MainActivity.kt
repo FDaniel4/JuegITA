@@ -1,5 +1,6 @@
 package com.example.juegita.interfaces
 
+import ProjectInfoScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -56,7 +57,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.juegita.MemoramaGame
+import com.example.juegita.MinijuegosApp
 import com.example.juegita.TicTacToeGame
+import com.example.juegita.ui.theme.ForgotPasswordScreen
+import com.example.juegita.ui.theme.PasswordEditScreen
+import com.example.juegita.ui.theme.ProfileEditScreen
+import com.example.juegita.ui.theme.TermsConditionsScreen
+import com.example.juegita.ui.theme.VerificationCodeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

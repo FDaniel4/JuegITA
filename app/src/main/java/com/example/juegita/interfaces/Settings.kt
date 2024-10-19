@@ -1,13 +1,10 @@
-package com.example.juegita
+package com.example.juegita.interfaces
 
-import android.widget.Switch
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,33 +15,24 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.ChipElevation
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChipDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -58,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -164,7 +151,7 @@ fun GlobalSettingsScreen(navController: NavHostController) {
                 LanguageDropdown()
 
                 // Sección de Ayuda
-                ExtendedFloatingActionButton(onClick = { /* Acción al hacer clic en el botón*/ },
+                ExtendedFloatingActionButton(onClick = { navController.navigate("contacto") },
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = Color.White,
                     contentColor = Color.Black,
@@ -178,7 +165,7 @@ fun GlobalSettingsScreen(navController: NavHostController) {
                 }
 
                 // Sección de Acerca de
-                ExtendedFloatingActionButton(onClick = { /* Acción al hacer clic en el botón*/ },
+                ExtendedFloatingActionButton(onClick = { navController.navigate("acerca-de") },
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = Color.White,
                     contentColor = Color.Black,
@@ -194,31 +181,6 @@ fun GlobalSettingsScreen(navController: NavHostController) {
             }
         }
     )
-}
-
-@Composable
-fun SettingsSection(title: String, content: @Composable ColumnScope.() -> Unit) {
-    Column {
-        Text(
-            text = title,
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        content()
-    }
-}
-
-@Composable
-fun SettingsItem(settingName: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { /* Acción al hacer clic en la opción */ }
-            .padding(vertical = 8.dp)
-    ) {
-        Text(text = settingName, fontSize = 16.sp, )
-    }
 }
 
 @Composable
@@ -296,7 +258,7 @@ fun DropdownMenuWithItems(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = true }
-                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                .border(2.dp, Color.Black, RoundedCornerShape(5.dp))
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -305,7 +267,7 @@ fun DropdownMenuWithItems(
             Icon(
                 imageVector = Icons.Filled.ArrowDropDown,
                 contentDescription = "Icono de menú",
-                tint = Color.Gray
+                tint = Color.Black
             )
         }
         DropdownMenu(

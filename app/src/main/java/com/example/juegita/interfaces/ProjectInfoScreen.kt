@@ -48,10 +48,10 @@ fun ProjectInfoScreen(navController: NavController) {
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("perfil") }) {
+                    IconButton(onClick = { navController.navigate("settings") }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Ir al perfil",
+                            contentDescription = "Ir a la configuración",
                             tint = Color.Black,
                             modifier = Modifier
                                 .size(40.dp)
