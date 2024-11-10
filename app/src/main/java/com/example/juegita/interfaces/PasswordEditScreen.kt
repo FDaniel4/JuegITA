@@ -1,21 +1,11 @@
-package com.example.juegita.ui.theme
+package com.example.juegita.interfaces
 
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,18 +14,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.example.juegita.components.BotonAncho
+import com.example.juegita.components.CustomPasswordField
+import com.example.juegita.components.IconsButton
+import com.example.juegita.components.TitleBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,34 +32,13 @@ import androidx.navigation.NavController
 fun PasswordEditScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val gradientColors = listOf(Color.Cyan, Color.Magenta)
-                        Text(
-                            text = "Cambiar contraseña",
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.Center),
-                            style = TextStyle(
-                                brush = Brush.linearGradient(colors = gradientColors)
-                            )
-                        )
-                    }
+                    TitleBar(name = "Cambiar contraseña")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("perfil") }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Ir al perfil",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 1.dp)
-                        )
+                    IconsButton(icon = Icons.Default.ArrowBack) {
+                        navController.navigate("perfil")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -99,7 +67,6 @@ fun PasswordEditScreen(navController: NavController) {
                         tint = Color.Black,
                         modifier = Modifier.size(194.dp)
                     )
-
                         Text(
                             text = "Username",
                             fontSize = 24.sp,
@@ -110,75 +77,33 @@ fun PasswordEditScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     //Contraseña actual
-                    var contraseña_actual by rememberSaveable { mutableStateOf("") }
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ){
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "Contraseña actual",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 8.dp)
-                        )
-                        TextField(
-                            value = contraseña_actual,
-                            onValueChange = {contraseña_actual = it},
-                            label = { Text("Contraseña actual") },
-                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color.White,
-                                focusedIndicatorColor = Color.Green,
-                                unfocusedIndicatorColor = Color.LightGray
-                            )
-                        )
-                    }
+                    var contraseñaActual by rememberSaveable { mutableStateOf("") }
+                    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+                    CustomPasswordField(
+                        password = contraseñaActual,
+                        onPasswordChange = { contraseñaActual = it },
+                        passwordVisible = passwordVisible,
+                        onPasswordVisibilityChange = { passwordVisible = !passwordVisible },
+                        label = "Contraseña actual",
+                        showError = false
+                    )
                     //Confirmar contraseña
-                    var contraseña_nueva by rememberSaveable { mutableStateOf("") }
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ){
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "Contraseña nueva",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 8.dp)
-                        )
-                        TextField(
-                            value = contraseña_nueva,
-                            onValueChange = {contraseña_nueva = it},
-                            label = { Text("Contraseña nueva") },
-                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color.White,
-                                focusedIndicatorColor = Color.Green,
-                                unfocusedIndicatorColor = Color.LightGray
-                            )
-                        )
-                    }
+                    var contraseñaNueva by rememberSaveable { mutableStateOf("") }
+
+                    CustomPasswordField(
+                        password = contraseñaNueva,
+                        onPasswordChange = { contraseñaNueva = it },
+                        passwordVisible = passwordVisible,
+                        onPasswordVisibilityChange = { passwordVisible = !passwordVisible },
+                        label = "Contraseña nueva"
+                    )
                     // Contraseña nueva
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    Button(
-                        onClick = { navController.navigate("perfil") },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(Color(0xFFFF5722)) // Orange Button
-                    ) {
-                        Text(text = "Aceptar", color = Color.White, fontSize = 19.sp)
+                    BotonAncho(name = "Aceptar") {
+                        navController.navigate("perfil")
                     }
                 }
             }

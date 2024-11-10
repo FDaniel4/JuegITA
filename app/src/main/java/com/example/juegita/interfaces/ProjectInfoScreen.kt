@@ -1,62 +1,38 @@
+package com.example.juegita.interfaces
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.juegita.R
+import com.example.juegita.components.IconsButton
+import com.example.juegita.components.Texts
+import com.example.juegita.components.TitleBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProjectInfoScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val gradientColors = listOf(Color.Cyan, Color.Magenta)
-                        Text(
-                            text = "Acerca de JuegITA",
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.Center),
-                            style = TextStyle(
-                                brush = Brush.linearGradient(colors = gradientColors)
-                            )
-                        )
-                    }
+                    TitleBar(name = "Acerca de")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("settings") }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Ir a la configuración",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 1.dp)
-                        )
+                    IconsButton(icon = Icons.Default.ArrowBack) {
+                        navController.popBackStack()
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -73,27 +49,15 @@ fun ProjectInfoScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Text(
-                text = "JuegITA",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+            Texts(name = "JuegITA es un proyecto  desarrollado por el equipo 6 de la materia de " +
+                    "desarrollo de aplicaciones móviles, que contiene varios mini-juegos " +
+                    "divertidos y desafiantes, creados para ofrecer entretenimiento y retos a " +
+                    "sus usuarios.", fontSize = 25
             )
 
-            Text(
-                text = "JuegITA es un proyecto  desarrollado por el equipo 6 de la materia de desarrollo de aplicaciones móviles, que contiene varios mini-juegos divertidos y desafiantes, creados para ofrecer entretenimiento y retos a sus usuarios.",
-                textAlign = TextAlign.Center,
-                fontSize = 25.sp,
-                lineHeight = 25.sp,
-                modifier = Modifier.padding(bottom = 32.dp)
-            )
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "Videojuegos Incluidos:",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Texts(name = "Videojuegos Incluidos:", fontSize = 20)
 
             GameItem(name = "Tic-Tac-Toe", description = "Un clásico juego de tres en línea.")
             GameItem(name = "Memorama", description = "Pon a prueba tu memoria con este divertido juego.")

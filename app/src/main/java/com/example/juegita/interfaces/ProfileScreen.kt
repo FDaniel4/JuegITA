@@ -4,24 +4,30 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.example.juegita.components.BottomNavItem
+import com.example.juegita.components.CustomExtendedFAB
+import com.example.juegita.components.IconsButton
+import com.example.juegita.components.Texts
+import com.example.juegita.components.TitleBar
+import com.example.juegita.components.VideoGameBottomNavigation
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,35 +35,9 @@ import androidx.navigation.NavController
 fun UserProfileScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val gradientColors = listOf(Color.Cyan, Color.Magenta)
-                        Text(
-                            text = "Perfil de usuario",
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.Center),
-                            style = TextStyle(
-                                brush = Brush.linearGradient(colors = gradientColors)
-                            )
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigate("settings") }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Ir a la configuración",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 1.dp)
-                        )
-                    }
+                    TitleBar(name = "Perfil de usuario")
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF6200EA)
@@ -96,42 +76,24 @@ fun UserProfileScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Nombre
-                    Text(
-                        text = "Nombre",
-                        fontSize = 16.sp,
-                        color = Color.Black,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
+                    Texts(name = "Nombre", fontSize = 16)
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Sección de editar perfil
-                    ExtendedFloatingActionButton(onClick = { navController.navigate("editar-perfil") },
-                        modifier = Modifier.fillMaxWidth(),
-                        containerColor = Color.White,
-                        contentColor = Color.Black,
-                    ) {
-                        Icon(Icons.Filled.Edit, "")
-                        Text(
-                            text =" EDITAR PERFIL",
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                    CustomExtendedFAB(
+                        text = "EDITAR PERFIL",
+                        icon = Icons.Filled.Edit,
+                        onClick = { navController.navigate("editar-perfil") }
+                    )
+
                     Spacer(modifier = Modifier.height(10.dp))
                     // Sección de editar perfil
-                    ExtendedFloatingActionButton(onClick = { /* Acción al hacer clic en el botón*/ },
-                        modifier = Modifier.fillMaxWidth(),
-                        containerColor = Color.White,
-                        contentColor = Color.Black,
-                    ) {
-                        Icon(Icons.Filled.Lock, "")
-                        Text(
-                            text =" CAMBIAR CONTRASEÑA",
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                    CustomExtendedFAB(
+                        text = "CAMBIAR CONTRASEÑA",
+                        icon = Icons.Filled.Lock,
+                        onClick = { navController.navigate("cambiar-contraseña") }
+                    )
+
                     Spacer(modifier = Modifier.height(10.dp))
                     // Sección de actividades recientes
                     AssistChip(
@@ -149,7 +111,8 @@ fun UserProfileScreen(navController: NavController) {
                                     modifier = Modifier.align(Alignment.Center),
                                 )
                             }},
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .height(45.dp),
                         elevation = AssistChipDefaults.assistChipElevation(1.dp),
                         border = null,
@@ -159,22 +122,18 @@ fun UserProfileScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(8.dp))
                     RecentActivitiesSection()
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Enlaces a redes sociales
-                    Text(
-                        text = "Amigos",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        modifier = Modifier.align(Alignment.Start)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
 
                 }
             }
+        },
+        bottomBar = {
+            val navItems = listOf(
+                BottomNavItem("minijuegos", "Juegos", Icons.Filled.Star),
+                BottomNavItem("perfil", "Cuenta", Icons.Filled.AccountCircle),
+                BottomNavItem("amigos", "Amigos", Icons.Filled.AccountBox),
+                BottomNavItem("settings", "Configuración", Icons.Filled.Settings)
+            )
+            VideoGameBottomNavigation(navController, navItems)
         }
     )
 }

@@ -1,10 +1,9 @@
-package com.example.juegita.ui.theme
+package com.example.juegita.interfaces
 
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
@@ -16,19 +15,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.juegita.R
+import com.example.juegita.components.BotonAncho
+import com.example.juegita.components.IconTextField
+import com.example.juegita.components.IconsButton
+import com.example.juegita.components.Texts
+import com.example.juegita.components.TitleBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,33 +35,13 @@ import com.example.juegita.R
 fun ForgotPasswordScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val gradientColors = listOf(Color.Cyan, Color.Magenta)
-                        Text(
-                            text = "Olvidar contraseña",
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.Center),
-                            style = TextStyle(
-                                brush = Brush.linearGradient(colors = gradientColors)
-                            )
-                        )
-                    }
+                    TitleBar(name = "Olvidar contraseña")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("inicio-sesion") }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Ir al perfil",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(40.dp)
-                        )
+                    IconsButton(icon = Icons.Default.ArrowBack) {
+                        navController.popBackStack()
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -93,55 +72,30 @@ fun ForgotPasswordScreen(navController: NavController) {
                             .padding(bottom = 16.dp)
                     )
 
-                    Text(
-                        text = "Por favor ingrese su correo electrónico para recibir un código de verificación",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        textAlign = TextAlign.Center
+                    Texts(
+                        name = "Por favor ingrese su correo electrónico para recibir un código de " +
+                                "verificación",
+                        fontSize = 24
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     //Correo electronico
-                    var correo by rememberSaveable { mutableStateOf("") }
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ){
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = "Correo electrónico",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 8.dp)
-                        )
-                        TextField(
-                            value = correo,
-                            onValueChange = {correo = it},
-                            label = { Text("Correo electrónico") },
-                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color.White,
-                                focusedIndicatorColor = Color.Green,
-                                unfocusedIndicatorColor = Color.LightGray
-                            )
-                        )
-                    }
+                    var email by rememberSaveable { mutableStateOf("") }
+                    IconTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = "Correo",
+                        icon = Icons.Default.Email,
+                        keyboardType = KeyboardType.Email,
+                        validate = { it.matches(Regex("^[\\w.-]+@[\\w.-]+\\.[a-z]{2,}$")) },
+                        errorMessage = "Formato de correo inválido"
+                    )
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    Button(
-                        onClick = { navController.navigate("codigo-verificacion") },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(Color(0xFFFF5722)) // Orange Button
-                    ) {
-                        Text(text = "Aceptar", color = Color.White, fontSize = 19.sp)
+                    BotonAncho(name = "Aceptar") {
+                         navController.navigate("codigo-verificacion/$email")
                     }
                 }
             }
@@ -152,5 +106,5 @@ fun ForgotPasswordScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewForgotPasswordScreen() {
-    ForgotPasswordScreen(navController = NavController(LocalContext.current))
+    ForgotPasswordScreen(navController = rememberNavController())
 }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,13 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,20 +30,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.juegita.components.IconsButton
+import com.example.juegita.components.TitleBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TermsConditionsScreen(navController: NavController) {
-    var isChecked by remember { mutableStateOf(false) }  // Estado para el checkbox
     val termsText = """
 1. Aceptación de los Términos
 Al descargar, instalar y/o usar esta aplicación de minijuegos (en adelante, "la App"), usted acepta cumplir y estar sujeto a los siguientes términos y condiciones (en adelante, "los Términos"). Si no está de acuerdo con estos Términos, no debe utilizar la App.
@@ -93,35 +88,13 @@ Si tiene alguna pregunta o inquietud sobre estos Términos, puede ponerse en con
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val gradientColors = listOf(Color.Cyan, Color.Magenta)
-                        Text(
-                            text = "Terminos y condiciones",
-                            color = Color.Black,
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.Center),
-                            style = TextStyle(
-                                brush = Brush.linearGradient(colors = gradientColors)
-                            )
-                        )
-                    }
+                    TitleBar(name = "Terminos y condiciones")
                 },
                 navigationIcon = {
-                    IconButton(onClick = {  navController.navigate("registro") }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Ir a la pantalla principal",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 1.dp)
-                        )
+                    IconsButton(icon = Icons.Default.ArrowBack) {
+                        navController.popBackStack()
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -157,31 +130,17 @@ Si tiene alguna pregunta o inquietud sobre estos Términos, puede ponerse en con
                     )
                 }
             }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 16.dp)
-                ) {
-                    Checkbox(
-                        checked = isChecked,
-                        onCheckedChange = { isChecked = it }
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Estoy de acuerdo con los términos y condiciones")
-                }
 
                 Button(
                     onClick = {
-                        if (isChecked) {
-                            navController.navigate("registro")
-                        }
+                        navController.popBackStack()
                     },
-                    enabled = isChecked,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFFFF5722))
                 ) {
-                    Text(text = "Siguiente"
+                    Text(text = "Ok"
                         , color = Color.White, fontSize = 19.sp)
                 }
             }
@@ -192,5 +151,7 @@ Si tiene alguna pregunta o inquietud sobre estos Términos, puede ponerse en con
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TermsAndConditionsScreenPreview() {
-    TermsConditionsScreen(navController = rememberNavController())
+    TermsConditionsScreen(
+        navController = rememberNavController()
+    )
 }
