@@ -1,13 +1,10 @@
-package com.example.juegita
+package com.example.juegita.interfaces
 
-import android.widget.Switch
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,31 +20,22 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.ChipElevation
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChipDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,16 +44,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.juegita.components.BottomNavItem
+import com.example.juegita.components.CustomExtendedFAB
+import com.example.juegita.components.Texts
+import com.example.juegita.components.TitleBar
+import com.example.juegita.components.VideoGameBottomNavigation
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,36 +63,9 @@ import androidx.navigation.compose.rememberNavController
 fun GlobalSettingsScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val gradientColors = listOf(Color.Cyan, Color.Magenta)
-                        Text(
-                            text = "Configuración",
-                            color = Color.Black,
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.Center),
-                            style = TextStyle(
-                                brush = Brush.linearGradient(colors = gradientColors)
-                            )
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = {  navController.navigate("minijuegos") }) {
-                        Icon(
-                            imageVector = Icons.Default.Home,
-                            contentDescription = "Ir a la pantalla principal",
-                            tint = Color.White,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 1.dp)
-                        )
-                    }
+                    TitleBar(name = "Configuración")
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color(0xFF6200EA)
@@ -119,19 +82,6 @@ fun GlobalSettingsScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
 
-                // Sección de Cuenta
-                ExtendedFloatingActionButton(onClick = { navController.navigate("perfil") },
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = Color.White,
-                    contentColor = Color.Black,
-                ) {
-                    Icon(Icons.Filled.AccountCircle, "")
-                    Text(
-                        text =" CUENTA",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
                 AssistChip(
                     onClick = {},
                     label = {
@@ -147,7 +97,8 @@ fun GlobalSettingsScreen(navController: NavHostController) {
                                 modifier = Modifier.align(Alignment.Center),
                             )
                         }},
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .height(45.dp),
                     elevation = AssistChipDefaults.assistChipElevation(1.dp),
                     border = null,
@@ -164,61 +115,33 @@ fun GlobalSettingsScreen(navController: NavHostController) {
                 LanguageDropdown()
 
                 // Sección de Ayuda
-                ExtendedFloatingActionButton(onClick = { /* Acción al hacer clic en el botón*/ },
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = Color.White,
-                    contentColor = Color.Black,
-                ) {
-                    Icon(Icons.Filled.Email, "")
-                    Text(
-                        text =" CONTACTAR",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                CustomExtendedFAB(
+                    text = " CONTACTAR",
+                    icon = Icons.Filled.Email,
+                    onClick = { navController.navigate("contacto") }
+                )
 
                 // Sección de Acerca de
-                ExtendedFloatingActionButton(onClick = { /* Acción al hacer clic en el botón*/ },
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = Color.White,
-                    contentColor = Color.Black,
-                ) {
-                    Icon(Icons.Filled.Info, "")
-                    Text(
-                        text =" ACERCA DE",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                CustomExtendedFAB(
+                    text = " ACERCA DE",
+                    icon = Icons.Filled.Info,
+                    onClick = { navController.navigate("acerca-de") }
+                )
 
             }
+        },
+        bottomBar = {
+            val navItems = listOf(
+                BottomNavItem("minijuegos", "Juegos", Icons.Filled.Star),
+                BottomNavItem("perfil", "Cuenta", Icons.Filled.AccountCircle),
+                BottomNavItem("amigos", "Amigos", Icons.Filled.AccountBox),
+                BottomNavItem("settings", "Configuración", Icons.Filled.Settings)
+            )
+
+            VideoGameBottomNavigation(navController, navItems)
+
         }
     )
-}
-
-@Composable
-fun SettingsSection(title: String, content: @Composable ColumnScope.() -> Unit) {
-    Column {
-        Text(
-            text = title,
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        content()
-    }
-}
-
-@Composable
-fun SettingsItem(settingName: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { /* Acción al hacer clic en la opción */ }
-            .padding(vertical = 8.dp)
-    ) {
-        Text(text = settingName, fontSize = 16.sp, )
-    }
 }
 
 @Composable
@@ -274,7 +197,7 @@ fun LanguageDropdown() {
     val languages = listOf("Español", "Inglés", "Francés", "Alemán")
 
     Column {
-        Text("Seleccionar idioma", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        Texts(name = "Seleccionar idioma", fontSize = 22)
         DropdownMenuWithItems(
             selectedItem = selectedLanguage,
             items = languages,
@@ -296,7 +219,7 @@ fun DropdownMenuWithItems(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = true }
-                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                .border(2.dp, Color.Black, RoundedCornerShape(5.dp))
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -305,7 +228,7 @@ fun DropdownMenuWithItems(
             Icon(
                 imageVector = Icons.Filled.ArrowDropDown,
                 contentDescription = "Icono de menú",
-                tint = Color.Gray
+                tint = Color.Black
             )
         }
         DropdownMenu(
