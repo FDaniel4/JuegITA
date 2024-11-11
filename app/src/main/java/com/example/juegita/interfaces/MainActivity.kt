@@ -64,6 +64,7 @@ import com.example.juegita.ui.theme.PasswordEditScreen
 import com.example.juegita.ui.theme.ProfileEditScreen
 import com.example.juegita.ui.theme.TermsConditionsScreen
 import com.example.juegita.ui.theme.VerificationCodeScreen
+import com.example.juegita.views.ElJuegoDeLaViborita
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -255,24 +256,22 @@ fun ComposeMultiScreenApp(){
         SetupNavGraph(navController = navController)
     }
 }
-
 @Composable
-fun SetupNavGraph (navController: NavHostController){
-    NavHost(navController = navController, startDestination = "inicio-sesion"){
-        composable("inicio-sesion"){ LoginScreen(navController) }
-        composable("registro"){ RegisterScreen(navController) }
-        composable("minijuegos"){ MinijuegosApp(navController) }
-        composable("settings"){ GlobalSettingsScreen(navController) }
-        composable("terminos"){ TermsConditionsScreen(navController) }
-        composable("perfil"){ UserProfileScreen(navController) }
-        composable("editar-perfil"){ ProfileEditScreen(navController) }
-        composable("cambiar-contraseña"){ PasswordEditScreen(navController) }
-        composable("tic-tac-toe"){ TicTacToeGame(navController) }
-        //composable("buscaminas_screen"){ BuscaminasScreen(navController) }
-        composable("memorama"){ MemoramaGame(navController) }
-        composable("olvidar-contraseña"){ ForgotPasswordScreen(navController) }
-        composable("codigo-verificacion"){ VerificationCodeScreen(navController) }
-        composable("acerca-de"){ ProjectInfoScreen(navController) }
-
+fun SetupNavGraph(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = "inicio-sesion") {
+        composable("inicio-sesion") { LoginScreen(navController) }
+        composable("registro") { RegisterScreen(navController) }
+        composable("minijuegos") { MinijuegosApp(navController) }
+        composable("settings") { GlobalSettingsScreen(navController) }
+        composable("terminos") { TermsConditionsScreen(navController) }
+        composable("perfil") { UserProfileScreen(navController) }
+        composable("editar-perfil") { ProfileEditScreen(navController) }
+        composable("cambiar-contraseña") { PasswordEditScreen(navController) }
+        composable("tic-tac-toe") { TicTacToeGame(navController) }
+        composable("memorama") { MemoramaGame(navController) }
+        composable("olvidar-contraseña") { ForgotPasswordScreen(navController) }
+        composable("codigo-verificacion") { VerificationCodeScreen(navController) }
+        composable("acerca-de") { ProjectInfoScreen(navController) }
+        composable("juego-de-la-viborita") { ElJuegoDeLaViborita() } // Nueva pantalla
     }
 }

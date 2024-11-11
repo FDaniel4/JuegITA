@@ -118,16 +118,17 @@ fun PantallaPrincipal(navController: NavHostController, modifier: Modifier = Mod
             MinijuegoButton(
                 minijuego = "Tic-Tac-Toe",
                 image = R.drawable.tres_en_raya,
-                onClick = {navController.navigate("tic-tac-toe")}
+                onClick = { navController.navigate("tic-tac-toe") }
             )
             MinijuegoButton(
                 minijuego = "Memorama",
                 image = R.drawable.dado,
-                onClick = {navController.navigate("memorama")}
+                onClick = { navController.navigate("memorama") }
             )
             MinijuegoButton(
-                minijuego = "Buscaminas",
-                image = R.drawable.buscaminas
+                minijuego = "Viborita",
+                image = R.drawable.viborita,
+                onClick = { navController.navigate("juego-de-la-viborita") }
             )
         }
 
