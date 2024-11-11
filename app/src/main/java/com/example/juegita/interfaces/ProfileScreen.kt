@@ -1,12 +1,13 @@
 package com.example.juegita.interfaces
 
+
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Settings
@@ -24,15 +25,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.juegita.components.BottomNavItem
 import com.example.juegita.components.CustomExtendedFAB
-import com.example.juegita.components.IconsButton
-import com.example.juegita.components.Texts
 import com.example.juegita.components.TitleBar
 import com.example.juegita.components.VideoGameBottomNavigation
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserProfileScreen(navController: NavController) {
+fun UserProfileScreen(navController: NavController,
+    imageUri: String = "",
+    nombre: String = "",
+    username: String = ""
+) {
+    // Si imageUri está vacío, puedes usar un recurso predeterminado o una imagen por defecto
+    val uri = if (imageUri.isNotEmpty()) Uri.parse(imageUri) else Uri.EMPTY
+
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -53,10 +60,8 @@ fun UserProfileScreen(navController: NavController) {
                 contentAlignment = Alignment.TopCenter
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     // Icono
                     Icon(
@@ -68,15 +73,21 @@ fun UserProfileScreen(navController: NavController) {
 
                     // Nombre de usuario
                     Text(
-                        text = "Username",
+                        text = username ?: "No Username", // Valor predeterminado si no hay username
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Nombre
-                    Texts(name = "Nombre", fontSize = 16)
+                    Text(
+                        text = nombre ?: "No Name", // Valor predeterminado si no hay nombre
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Sección de editar perfil
@@ -121,7 +132,6 @@ fun UserProfileScreen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     RecentActivitiesSection()
-
 
                 }
             }

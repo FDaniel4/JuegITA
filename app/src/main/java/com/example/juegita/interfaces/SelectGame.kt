@@ -63,7 +63,6 @@ fun MinijuegosApp(navController: NavHostController) {
 
 @Composable
 fun PantallaPrincipal(navController: NavHostController, modifier: Modifier = Modifier) {
-    var selectedGame by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = modifier
@@ -76,6 +75,7 @@ fun PantallaPrincipal(navController: NavHostController, modifier: Modifier = Mod
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Mostrar una cuadrícula de juegos
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -85,47 +85,20 @@ fun PantallaPrincipal(navController: NavHostController, modifier: Modifier = Mod
             items(listOf(
                 "Tic-Tac-Toe" to R.drawable.tres_en_raya,
                 "Memorama" to R.drawable.dado,
-                "Buscaminas" to R.drawable.buscaminas
+                "Snake" to R.drawable.snake,
+                "Simon says" to R.drawable.simonsay,
+
             )) { (minijuego, image) ->
                 MinijuegoButton(
                     minijuego = minijuego,
                     image = image,
-                    onClick = { selectedGame = minijuego }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(36.dp))
-
-        // Botón para jugar el juego seleccionado
-        if (selectedGame != null) {
-            Text(
-                text = "Juego seleccionado: $selectedGame",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { navController.navigate(selectedGame!!) },
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(Color(0xFFFF5722))
-            ) {
-                Text(
-                    text = "Jugar $selectedGame",
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    onClick = {
+                        navController.navigate(minijuego) }
                 )
             }
         }
     }
 }
-
 
 @Composable
 fun MinijuegoButton(
@@ -134,11 +107,15 @@ fun MinijuegoButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    Button(
+    ElevatedButton(
         onClick = onClick,
         shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(Color.Gray),
-        modifier = Modifier
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = Color.White
+        ),
+        elevation = ButtonDefaults.buttonElevation(15.dp),
+        modifier = modifier,
+
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             // Imagen del minijuego
@@ -160,6 +137,7 @@ fun MinijuegoButton(
             )
         }
     }
+
 }
 
 

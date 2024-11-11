@@ -1,9 +1,11 @@
-package com.example.juegita.ui.theme
+package com.example.juegita.interfaces
 
 
+import android.graphics.BitmapFactory
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,23 +20,41 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+//import com.example.juegita.camera.rememberCameraLauncher
+import com.example.juegita.camera.rememberGalleryLauncher
+import com.example.juegita.camera.rememberPermissionLauncher
+import com.example.juegita.camera.requestPermissions
 import com.example.juegita.components.BotonAncho
 import com.example.juegita.components.IconTextField
 import com.example.juegita.components.IconsButton
 import com.example.juegita.components.Texts
 import com.example.juegita.components.TitleBar
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileEditScreen(navController: NavController) {
+    val context = LocalContext.current
+    var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+
+    // Lanzadores para permisos y selección de imagen
+    val permissionLauncher = rememberPermissionLauncher(context) { granted ->
+        if (!granted) return@rememberPermissionLauncher
+    }
+
+//    val cameraLauncher = rememberCameraLauncher(context) { uri ->
+//        uri?.let { imageUri = it }
+//    }
+
+    val galleryLauncher = rememberGalleryLauncher { uri ->
+        uri?.let { imageUri = it }
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -65,27 +85,41 @@ fun ProfileEditScreen(navController: NavController) {
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Icono
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = "User Icon",
-                        tint = Color.Black,
-                        modifier = Modifier.size(194.dp)
-                    )
+                    // Icono o Imagen seleccionada
+                    if (imageUri != null) {
+                        // Mostrar la imagen seleccionada
+                        Image(
+                            bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(imageUri!!)).asImageBitmap(),
+                            contentDescription = "User Icon",
+                            modifier = Modifier.size(194.dp)
+                        )
+                    } else {
+                        // Mostrar icono de usuario por defecto
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "User Icon",
+                            tint = Color.Black,
+                            modifier = Modifier.size(194.dp)
+                        )
+                    }
 
-                    //
-                    TextButton(onClick = { print("Hello") }) {
+                    // Botón para subir imagen
+                    TextButton(onClick = {
+                        requestPermissions(context, permissionLauncher) {
+                            galleryLauncher.launch("image/*")
+                        }
+                    }) {
                         Texts(name = "Subir imagen", fontSize = 24)
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     var nombre by rememberSaveable { mutableStateOf("") }
-                    // Edicion de nombre
+                    // Edición de nombre
                     IconTextField(
                         value = nombre,
                         onValueChange = { nombre = it },
-                        label = "Username",
+                        label = "Nombre",
                         icon = Icons.Default.Edit,
                         keyboardType = KeyboardType.Text
                     )
@@ -101,11 +135,20 @@ fun ProfileEditScreen(navController: NavController) {
                         icon = Icons.Default.Person,
                         keyboardType = KeyboardType.Text
                     )
+
                     Spacer(modifier = Modifier.height(10.dp))
 
                     BotonAncho(name = "Aceptar") {
-                        navController.navigate("perfil")
+                        // Pasar parámetros como valores predeterminados si son nulos
+                        val safeImageUri = imageUri ?: ""
+                        val safeNombre = nombre ?: ""
+                        val safeUsername = username ?: ""
+
+                        // Navegar con los parámetros opcionales
+                        navController.navigate("perfil/$safeImageUri/$safeNombre/$safeUsername")
                     }
+
+
                 }
             }
         }
