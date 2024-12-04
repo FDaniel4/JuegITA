@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,7 +65,8 @@ import com.example.juegita.ui.theme.PasswordEditScreen
 import com.example.juegita.ui.theme.ProfileEditScreen
 import com.example.juegita.ui.theme.TermsConditionsScreen
 import com.example.juegita.ui.theme.VerificationCodeScreen
-import com.example.juegita.views.ElJuegoDeLaViborita
+import com.example.juegita.views.Game
+import com.example.juegita.views.Snake
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -272,6 +274,8 @@ fun SetupNavGraph(navController: NavHostController) {
         composable("olvidar-contraseña") { ForgotPasswordScreen(navController) }
         composable("codigo-verificacion") { VerificationCodeScreen(navController) }
         composable("acerca-de") { ProjectInfoScreen(navController) }
-        composable("juego-de-la-viborita") { ElJuegoDeLaViborita() } // Nueva pantalla
+        composable("juego-de-la-viborita") { val coroutineScope = rememberCoroutineScope()
+            val game = remember { Game(coroutineScope) }
+            Snake(game, navController) } // Nueva pantalla
     }
 }
