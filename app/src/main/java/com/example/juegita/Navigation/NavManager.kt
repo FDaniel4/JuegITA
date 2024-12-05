@@ -3,6 +3,8 @@ package com.example.juegita.Navigation
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,7 +20,8 @@ import com.example.juegita.interfaces.ProfileEditScreen
 import com.example.juegita.ui.theme.TermsConditionsScreen
 import com.example.juegita.interfaces.VerificationCodeScreen
 import com.example.juegita.interfaces.*
-import com.example.juegita.snake.ElJuegoDeLaViborita
+import com.example.juegita.snake.Game
+import com.example.juegita.snake.Snake
 
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
@@ -61,6 +64,8 @@ fun SetupNavGraph(navController: NavHostController) {
             val context = LocalContext.current
             CameraScreen(context)
         }
-        composable("Snake") { ElJuegoDeLaViborita(navController) }
+        composable("Snake") { val coroutineScope = rememberCoroutineScope()
+            val game = remember { Game(coroutineScope) }
+            Snake(game, navController) }
     }
 }
