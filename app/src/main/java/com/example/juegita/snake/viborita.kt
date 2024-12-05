@@ -18,8 +18,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -30,9 +32,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 data class State(val food: Pair<Int, Int>, val snake: List<Pair<Int, Int>>)
-
 class Game(private val scope: CoroutineScope) {
-
     private val mutex = Mutex()
     private val mutableState =
         MutableStateFlow(State(food = Pair(5, 5), snake = listOf(Pair(7, 7))))
@@ -47,12 +47,15 @@ class Game(private val scope: CoroutineScope) {
             }
         }
 
+    private var isPaused = false
+
     init {
         scope.launch {
             var snakeLength = 4
-
             while (true) {
                 delay(150)
+                if (isPaused) continue // Salta esta iteración si el juego está pausado
+
                 mutableState.update {
                     val newPosition = it.snake.first().let { poz ->
                         mutex.withLock {
@@ -83,25 +86,139 @@ class Game(private val scope: CoroutineScope) {
         }
     }
 
+    fun pauseGame(pause: Boolean) {
+        isPaused = pause
+    }
+
     companion object {
         const val BOARD_SIZE = 16
     }
 }
-
+/*
 @Composable
 fun Snake(game: Game, navController: NavHostController) {
     val state = game.state.collectAsState(initial = null)
+    var score by remember { mutableStateOf(0) }
+    var highScore by remember { mutableStateOf(0) }
+    var isPaused by remember { mutableStateOf(false) }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        // Espacio entre la barra de estado y la barra de puntuación
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Barra de puntuación
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Puntaje: $score", color = Color.Black)
+            Text("Puntaje más alto: $highScore", color = Color.Black)
+        }
+
+        // Tablero de juego
         state.value?.let {
+            // Actualiza el puntaje si el estado cambia
+            LaunchedEffect(it.snake.size) {
+                if (!isPaused) {
+                    score = it.snake.size - 4
+                    if (score > highScore) highScore = score
+                }
+            }
             Board(it)
         }
+
+        // Controles del juego
         Buttons {
-            game.move = it
+            if (!isPaused) game.move = it
         }
+
+        // Botones adicionales: Pausa y menú principal
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button(onClick = {
+                isPaused = !isPaused
+                game.pauseGame(isPaused) // Pausar o reanudar el juego
+            }) {
+                Text(if (isPaused) "Reanudar" else "Pausar")
+            }
+            Button(onClick = { navController.navigate("minijuegos") }) {
+                Text("Volver al menú principal")
+            }
+        }
+        }
+}*/
+@Composable
+fun Snake(game: Game, navController: NavHostController) {
+    val state = game.state.collectAsState(initial = null)
+    var score by remember { mutableStateOf(0) }
+    var highScore by remember { mutableStateOf(0) }
+    var isPaused by remember { mutableStateOf(false) }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxSize().padding(16.dp)
+    ) {
+        // Espacio entre la barra de estado y la barra de puntuación
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { navController.navigate("minijuegos") }) {
-            Text("Volver al menú principal")
+
+        // Barra de puntuación
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Puntaje: $score", color = Color.Black)
+            Text("Puntaje más alto: $highScore", color = Color.Black)
+        }
+
+        // Tablero de juego
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f) // Asegura que sea cuadrado
+        ) {
+            state.value?.let {
+                // Actualiza el puntaje si el estado cambia
+                LaunchedEffect(it.snake.size) {
+                    if (!isPaused) {
+                        score = it.snake.size - 4
+                        if (score > highScore) highScore = score
+                    }
+                }
+                Board(it)
+            }
+        }
+
+        // Controles del juego
+        Buttons {
+            if (!isPaused) game.move = it
+        }
+
+        // Botones adicionales: Pausa y menú principal
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button(onClick = {
+                isPaused = !isPaused
+                game.pauseGame(isPaused) // Pausar o reanudar el juego
+            }) {
+                Text(if (isPaused) "Reanudar" else "Pausar")
+            }
+            Button(onClick = { navController.navigate("minijuegos") }) {
+                Text("Volver al menú principal")
+            }
         }
     }
 }
@@ -129,6 +246,46 @@ fun Buttons(onDirectionChange: (Pair<Int, Int>) -> Unit) {
 
 @Composable
 fun Board(state: State) {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val tileSize = maxWidth / Game.BOARD_SIZE
+
+        // Dibuja la cuadrícula con un patrón de tablero de ajedrez
+        for (row in 0 until Game.BOARD_SIZE) {
+            for (col in 0 until Game.BOARD_SIZE) {
+                val isLightTile = (row + col) % 2 == 0
+                val tileColor = if (isLightTile) Color(0xFFA1E88B) else Color(0xFF108300) // Azul claro y oscuro
+
+                Box(
+                    Modifier
+                        .offset(x = tileSize * col, y = tileSize * row)
+                        .size(tileSize)
+                        .background(tileColor)
+                )
+            }
+        }
+
+        // Dibuja la comida
+        Box(
+            Modifier
+                .offset(x = tileSize * state.food.first, y = tileSize * state.food.second)
+                .size(tileSize)
+                .background(Color.Red, CircleShape)
+        )
+
+        // Dibuja la serpiente
+        state.snake.forEach {
+            Box(
+                Modifier
+                    .offset(x = tileSize * it.first, y = tileSize * it.second)
+                    .size(tileSize)
+                    .background(Color.Blue, RoundedCornerShape(4.dp))
+            )
+        }
+    }
+}
+/*
+@Composable
+fun Board(state: State) {
     BoxWithConstraints(Modifier.padding(16.dp)) {
         val tileSize = maxWidth / Game.BOARD_SIZE
         val Shapes = Shapes(
@@ -148,7 +305,7 @@ fun Board(state: State) {
                 .offset(x = tileSize * state.food.first, y = tileSize * state.food.second)
                 .size(tileSize)
                 .background(
-                    Color.DarkGray
+                    Color.Red
                     , CircleShape
                 )
         )
@@ -159,10 +316,18 @@ fun Board(state: State) {
                     .offset(x = tileSize * it.first, y = tileSize * it.second)
                     .size(tileSize)
                     .background(
-                        Color.DarkGray
+                        Color.Blue
                         , Shapes.small
                     )
             )
         }
     }
+}*/
+@Preview(showBackground = true)
+@Composable
+fun PreviewSnakeGame() {
+    val scope = rememberCoroutineScope()
+    val game = remember { Game(scope) }
+    val navController = rememberNavController()
+    Snake(game = game, navController = navController)
 }
