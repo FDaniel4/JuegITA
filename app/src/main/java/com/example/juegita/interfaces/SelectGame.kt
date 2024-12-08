@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -20,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,16 +30,25 @@ import com.example.juegita.components.BottomNavItem
 import com.example.juegita.components.Texts
 import com.example.juegita.components.TitleBar
 import com.example.juegita.components.VideoGameBottomNavigation
+import com.example.juegita.viewModel.NotesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MinijuegosApp(navController: NavHostController) {
+fun MinijuegosApp(navController: NavHostController, notesViewModel: NotesViewModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     TitleBar(name = "Mini juegos")
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        notesViewModel.signOut()
+                        navController.popBackStack()
+                    }) {
+                        Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "")
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF6200EA)
@@ -54,7 +63,8 @@ fun MinijuegosApp(navController: NavHostController) {
                 BottomNavItem("minijuegos", "Juegos", Icons.Filled.Star),
                 BottomNavItem("perfil", "Cuenta", Icons.Filled.AccountCircle),
                 BottomNavItem("amigos", "Amigos", Icons.Filled.AccountBox),
-                BottomNavItem("settings", "Ajustes", Icons.Filled.Settings)
+                BottomNavItem("settings", "Ajustes", Icons.Filled.Settings),
+                BottomNavItem("juegos", "Noticias", Icons.Filled.Star)
             )
             VideoGameBottomNavigation(navController, navItems)
         }
@@ -144,5 +154,5 @@ fun MinijuegoButton(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    MinijuegosApp(navController = rememberNavController())
+    MinijuegosApp(navController = rememberNavController(), notesViewModel = NotesViewModel())
 }

@@ -1,6 +1,8 @@
 package com.example.juegita.interfaces
 
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -63,9 +65,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactUsScreen(navController: NavController) {
-    val snackbarHostState = remember{ SnackbarHostState() } // Estado del Snackbar
-    val coroutineScope = rememberCoroutineScope() // Necesario para lanzar coroutines
-    val context = LocalContext.current // Obtener contexto
+    val snackbarHostState = remember{ SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -218,18 +220,42 @@ fun ContactUsScreen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Botón con SnackBar y navegación
+                    // Botón con SnackBar y envío de correo electrónico
                     Button(
                         onClick = {
-                            // Mostrar SnackBar y navegar después de mostrarlo
+                            // Mostrar SnackBar y luego intentar enviar el correo
                             coroutineScope.launch {
                                 val result = snackbarHostState.showSnackbar(
                                     message = "Mensaje enviado al administrador",
                                     actionLabel = "OK"
                                 )
-                                // Si se presiona el botón de acción del snackbar o se muestra, navegar
+                                // Si se presiona el botón de acción del SnackBar o se muestra, enviar correo
                                 if (result == SnackbarResult.ActionPerformed || result == SnackbarResult.Dismissed) {
-                                    navController.navigate("settings")
+                                    val intent = Intent(Intent.ACTION_SEND).apply {
+                                        type =
+                                            "message/rfc822" // Tipo de datos para aplicaciones de correo
+                                        putExtra(
+                                            Intent.EXTRA_EMAIL,
+                                            arrayOf("palaciohernandezdaniel@gmail.com")
+                                        )
+                                        putExtra(Intent.EXTRA_SUBJECT, "Nuevo mensaje de usuario")
+                                        putExtra(
+                                            Intent.EXTRA_TEXT, """
+                        Nombre: $nombre
+                        Correo: $correo
+                        Mensaje: $mensaje
+                    """.trimIndent()
+                                        )
+                                    }
+                                    try {
+                                        // Intent para iniciar la app de correo
+                                        navController.context.startActivity(
+                                            Intent.createChooser(intent, "Enviar correo con:")
+                                        )
+                                    } catch (e: ActivityNotFoundException) {
+                                        // Manejo en caso de que no haya aplicaciones de correo disponibles
+                                        snackbarHostState.showSnackbar("No hay aplicaciones de correo instaladas.")
+                                    }
                                 }
                             }
                         },
@@ -238,6 +264,7 @@ fun ContactUsScreen(navController: NavController) {
                     ) {
                         Text(text = "Aceptar", color = Color.White, fontSize = 19.sp)
                     }
+
                 }
             }
         }

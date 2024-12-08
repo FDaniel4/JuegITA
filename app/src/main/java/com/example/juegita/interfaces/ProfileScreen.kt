@@ -1,19 +1,22 @@
 package com.example.juegita.interfaces
 
-
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,27 +27,37 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.juegita.components.BottomNavItem
+import com.example.juegita.components.CardNote
 import com.example.juegita.components.CustomExtendedFAB
 import com.example.juegita.components.TitleBar
 import com.example.juegita.components.VideoGameBottomNavigation
+import com.example.juegita.viewModel.NotesViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserProfileScreen(navController: NavController,
-    imageUri: String = "",
-    nombre: String = "",
-    username: String = ""
-) {
-    // Si imageUri está vacío, puedes usar un recurso predeterminado o una imagen por defecto
-    val uri = if (imageUri.isNotEmpty()) Uri.parse(imageUri) else Uri.EMPTY
+fun UserProfileScreen(navController: NavController,notesViewModel: NotesViewModel) {
 
+    LaunchedEffect(Unit){
+        notesViewModel.fetchNotes()
+    }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     TitleBar(name = "Perfil de usuario")
+                },
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate("AddNoteView")
+                    }){
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Agregar nota",
+                            tint = Color.White
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF6200EA)
@@ -71,24 +84,7 @@ fun UserProfileScreen(navController: NavController,
                         modifier = Modifier.size(194.dp)
                     )
 
-                    // Nombre de usuario
-                    Text(
-                        text = username ?: "No Username", // Valor predeterminado si no hay username
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Nombre
-                    Text(
-                        text = nombre ?: "No Name", // Valor predeterminado si no hay nombre
-                        fontSize = 16.sp,
-                        color = Color.Black
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     // Sección de editar perfil
                     CustomExtendedFAB(
@@ -98,15 +94,8 @@ fun UserProfileScreen(navController: NavController,
                     )
 
                     Spacer(modifier = Modifier.height(10.dp))
-                    // Sección de editar perfil
-                    CustomExtendedFAB(
-                        text = "CAMBIAR CONTRASEÑA",
-                        icon = Icons.Filled.Lock,
-                        onClick = { navController.navigate("cambiar-contraseña") }
-                    )
+                    // Sección de notas
 
-                    Spacer(modifier = Modifier.height(10.dp))
-                    // Sección de actividades recientes
                     AssistChip(
                         onClick = {},
                         label = {
@@ -115,7 +104,7 @@ fun UserProfileScreen(navController: NavController,
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "Actividad reciente",
+                                    text = "Mis notas",
                                     color = Color.Black,
                                     fontSize = 22.sp,
                                     fontWeight = FontWeight.Bold,
@@ -131,8 +120,14 @@ fun UserProfileScreen(navController: NavController,
 
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    RecentActivitiesSection()
-
+                    val datos by notesViewModel.notesData.collectAsState()
+                    LazyColumn{
+                        items(datos){ item ->
+                            CardNote(title = item.title, note = item.note, date = item.date ) {
+                                navController.navigate("EditNoteView/${item.idDoc}")
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -148,37 +143,8 @@ fun UserProfileScreen(navController: NavController,
     )
 }
 
-@Composable
-fun RecentActivitiesSection() {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        ActivityCard(activity = "Jugó Memorama - 10/10/2024")
-        ActivityCard(activity = "Completó el curso de Kotlin - 09/10/2024")
-        ActivityCard(activity = "Publicó una nueva foto - 08/10/2024")
-    }
-}
-
-@Composable
-fun ActivityCard(activity: String) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(Color.White)
-    ) {
-        Text(
-            text = activity,
-            modifier = Modifier.padding(16.dp),
-            fontSize = 16.sp,
-            color = Color.Gray
-        )
-    }
-}
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewUserProfileScreen() {
-    UserProfileScreen(navController = NavController(LocalContext.current))
+    UserProfileScreen(navController = NavController(LocalContext.current), notesViewModel = NotesViewModel())
 }

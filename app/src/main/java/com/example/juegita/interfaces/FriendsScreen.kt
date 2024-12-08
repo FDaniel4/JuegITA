@@ -103,7 +103,7 @@ fun AmigosScreen(navController: NavHostController) {
         bottomBar = {
             val navItems = listOf(
                 BottomNavItem("minijuegos", "Juegos", Icons.Filled.Star),
-                BottomNavItem("perfil", "Cuenta", Icons.Filled.AccountCircle),
+                BottomNavItem("perfil1", "Cuenta", Icons.Filled.AccountCircle),
                 BottomNavItem("amigos", "Amigos", Icons.Filled.AccountBox),
                 BottomNavItem("settings", "Configuración", Icons.Filled.Settings)
             )

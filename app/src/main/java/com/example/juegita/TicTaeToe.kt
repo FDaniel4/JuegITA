@@ -55,7 +55,7 @@ fun TicTacToeGame(navController: NavHostController) {
                 },
                 navigationIcon = {
                     IconsButton(icon = Icons.Default.ArrowBack) {
-                        navController.navigate("perfil")
+                        navController.navigate("minijuegos")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

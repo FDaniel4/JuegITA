@@ -1,4 +1,4 @@
-package com.example.juegita.views
+package com.example.juegita.viewsAPI
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth

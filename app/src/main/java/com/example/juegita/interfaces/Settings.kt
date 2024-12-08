@@ -1,7 +1,6 @@
 package com.example.juegita.interfaces
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,12 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
@@ -27,8 +24,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChipDefaults
@@ -53,7 +48,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.juegita.components.BottomNavItem
 import com.example.juegita.components.CustomExtendedFAB
-import com.example.juegita.components.Texts
 import com.example.juegita.components.TitleBar
 import com.example.juegita.components.VideoGameBottomNavigation
 
@@ -111,9 +105,6 @@ fun GlobalSettingsScreen(navController: NavHostController) {
                 // Sección de Notificaciones
                 ToggleSwitch(settingName = "Notificaciones", isChecked = false)
 
-                // Sección de Lenguaje
-                LanguageDropdown()
-
                 // Sección de Ayuda
                 CustomExtendedFAB(
                     text = " CONTACTAR",
@@ -126,6 +117,13 @@ fun GlobalSettingsScreen(navController: NavHostController) {
                     text = " ACERCA DE",
                     icon = Icons.Filled.Info,
                     onClick = { navController.navigate("acerca-de") }
+                )
+
+                // Sección de Terminos y condiciones
+                CustomExtendedFAB(
+                    text = " TERMINOS Y CONDICIONES ",
+                    icon = Icons.Filled.Info,
+                    onClick = { navController.navigate("terminos") }
                 )
 
             }
@@ -191,62 +189,6 @@ fun ToggleSwitch(settingName: String, isChecked: Boolean) {
     }
 }
 
-@Composable
-fun LanguageDropdown() {
-    var selectedLanguage by remember { mutableStateOf("Español") }
-    val languages = listOf("Español", "Inglés", "Francés", "Alemán")
-
-    Column {
-        Texts(name = "Seleccionar idioma", fontSize = 22)
-        DropdownMenuWithItems(
-            selectedItem = selectedLanguage,
-            items = languages,
-            onItemSelected = { selectedLanguage = it }
-        )
-    }
-}
-
-@Composable
-fun DropdownMenuWithItems(
-    selectedItem: String,
-    items: List<String>,
-    onItemSelected: (String) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Box {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expanded = true }
-                .border(2.dp, Color.Black, RoundedCornerShape(5.dp))
-                .padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = selectedItem, fontSize = 18.sp)
-            Icon(
-                imageVector = Icons.Filled.ArrowDropDown,
-                contentDescription = "Icono de menú",
-                tint = Color.Black
-            )
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            items.forEach { item ->
-                DropdownMenuItem(
-                    text = { Text(text = item) },
-                    onClick = {
-                        onItemSelected(item)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}
 
 
 @Preview(showBackground = true, showSystemUi = true)

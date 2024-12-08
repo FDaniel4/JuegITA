@@ -1,4 +1,8 @@
 package com.example.juegita
 
-class GameAplication {
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class GameAplication: Application() {
 }

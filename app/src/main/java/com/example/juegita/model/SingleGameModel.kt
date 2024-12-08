@@ -1,4 +1,9 @@
 package com.example.juegita.model
 
-class SingleGameModel {
-}
+data class SingleGameModel(
+    val name : String,
+    val description_raw : String,
+    val metacritic: Int,
+    val website : String,
+    val background_image: String
+)
