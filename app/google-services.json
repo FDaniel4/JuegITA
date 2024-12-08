@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "861072900694",
+    "project_id": "juegita-586f4",
+    "storage_bucket": "juegita-586f4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861072900694:android:71f1f9d32ee8161750f1f7",
+        "android_client_info": {
+          "package_name": "com.example.juegita"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVPHsQ1apj8siZX3R1yYIvUH6AUH42NbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
